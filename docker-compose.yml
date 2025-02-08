@@ -1,0 +1,103 @@
+services:
+  postgres:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    container_name: my-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - my-network
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: my-api
+    ports:
+      - "8080:8080"
+    environment:
+      API_KEY: my-secret-api-key
+      DB_HOST: my-postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: mydb
+    depends_on:
+      - postgres
+    networks:
+      - my-network
+
+  sleeper1:
+    image: alpine
+    container_name: sleeper1
+    command: ["sleep", "infinity"]
+    networks:
+      - my-network
+
+  sleeper2:
+    image: alpine
+    container_name: sleeper2
+    command: ["sleep", "infinity"]
+    networks:
+      - my-network
+
+  sleeper3:
+    image: alpine
+    container_name: sleeper3
+    command: ["sleep", "infinity"]
+    networks:
+      - my-network
+
+  sleeper4:
+    image: alpine
+    container_name: sleeper4
+    command: ["sleep", "infinity"]
+    networks:
+      - my-network
+  sleeper5:
+    image: alpine
+    container_name: sleeper5
+    command: ["sleep", "infinity"]
+    networks:
+      - my-network
+    
+  pinger:
+    build:
+      context: ./pinger
+      dockerfile: Dockerfile
+    container_name: pinger
+    environment:
+      API_KEY: my-secret-api-key
+      DB_HOST: my-postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: mydb
+    depends_on:
+      - postgres
+    networks:
+      - my-network
+  frontend:
+    build:
+      context: ./frontend  # Укажите путь к папке с вашим React-приложением
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:80"  # Порт 80 внутри контейнера, порт 3000 на хосте
+    depends_on:
+      - api  # Зависит от API, чтобы фронтенд запускался после API
+    networks:
+      - my-network
+
+
+volumes:
+  postgres-data:
+
+networks:
+  my-network:

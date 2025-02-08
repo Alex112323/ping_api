@@ -1,0 +1,22 @@
+# Используем базовый образ Go
+FROM golang:1.19-alpine
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем файлы модулей и зависимостей
+COPY go.mod .
+COPY go.sum .
+
+# Скачиваем зависимости
+RUN go mod download
+
+ENV API_KEY=my-secret-api-key
+# Копируем исходный код
+COPY . .
+
+# Компилируем приложение
+RUN go build -o api .
+
+# Команда для запуска приложения
+CMD ["./api"]
