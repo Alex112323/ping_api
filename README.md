@@ -11,7 +11,7 @@
    ```bash
    cd ping_api
    ```
-4. Запустить docker-compose.yml c выводом всех логов:
+4. Запустить docker-compose.yml c выводом всех логов (для этого необходимо запустить приложение докер, чтобы начал работу Docker daemon):
    ```bash
    docker-compose up --build
    ```
